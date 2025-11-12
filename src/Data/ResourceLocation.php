@@ -22,6 +22,10 @@ class ResourceLocation
         $this->value = $value;
     }
 
+    public function with_param(string $param): ResourceLocation {
+        return self::create($this->namespace, $this->value.$param);
+    }
+
     public static function create(string $namespace, string $value): self {
         return new self($namespace, $value);
     }
