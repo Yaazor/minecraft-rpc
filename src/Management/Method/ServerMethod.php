@@ -18,19 +18,21 @@ class ServerMethod
     public static ServerMethod $ALLOWLIST;
 
 
+    public static ServerMethod $SERVER;
+
     private array $paths = [];
 
-    private function __construct(public readonly ResourceLocation $resourceLocation, private(set) ?string $inputClassName, private(set) ?string $outputClassName, private(set) bool $takes_array = false, private(set) bool $receives_array =  false)
+    private function __construct(public readonly ResourceLocation $resourceLocation, private(set) ?string $inputClassName, private(set) ?string $outputClassName, private(set) bool $receives_array =  false)
     {
 
     }
 
     /**
-     * @param class-string<TInput>|null $inputClassName
      * @param class-string<TOutput>|null $outputClassName
+     * @param class-string<TInput>|null $inputClassName
      * @return self<TInput, TOutput>
      */
-    public static function create(ResourceLocation $resourceLocation, ?string $inputClassName, ?string $outputClassName, bool $takes_array = false, bool $receives_array = false): object {
+    public static function create(ResourceLocation $resourceLocation, ?string $inputClassName = null, ?string $outputClassName = null, bool $receives_array = false): object {
         return new self($resourceLocation, $inputClassName, $outputClassName, $receives_array);
     }
 
@@ -51,9 +53,9 @@ class ServerMethod
      * @param bool $receives_array
      * @return self<TI, TO>
      */
-    public function withPath(string $path, ?string $inputClassName, ?string $outputClassName, bool $takes_array = false, bool $receives_array = false): object {
+    public function withPath(string $path, ?string $inputClassName = null, ?string $outputClassName = null, bool $takes_array = false, bool $receives_array = false): object {
         $location = $this->resourceLocation->withParam($path);
-        $method = new self($location, $inputClassName, $outputClassName, $takes_array, $receives_array);
+        $method = new self($location, $inputClassName, $outputClassName, $takes_array);
         $this->paths[$path] = $method;
         return $this;
     }
@@ -67,7 +69,7 @@ class ServerMethod
         self::$ALLOWLIST = self::create(
             ResourceLocation::read("minecraft:allowlist"),
             null,
-            MinecraftPlayer::class, false, true
+            MinecraftPlayer::class, true
         );
 
         self::$ALLOWLIST
@@ -76,7 +78,9 @@ class ServerMethod
             ->withPath("/remove", MinecraftPlayer::class, MinecraftPlayer::class, true, true)
             ->withPath("/clear", null, MinecraftPlayer::class, false, true);
 
-
+        self::$SERVER = self::create(ResourceLocation::read("minecraft:server"))
+            ->withPath('/status', null, ServerState::class)
+            ->withPath('/stop');
 
     }
 

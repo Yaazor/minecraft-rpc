@@ -5,10 +5,6 @@ namespace Yazor\MinecraftProtocol\Data\Type;
 class ServerState
 {
     /**
-     * @var array List of online players
-     */
-    public array $players;
-    /**
      * @var bool Whether the server is started or not
      */
     public bool $started;

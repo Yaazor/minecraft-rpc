@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Serializer;
  * @template TInput
  * @template TOuput
  */
-class MinecraftRequest implements \JsonSerializable
+class MinecraftRequest
 {
     /**
      * @var TInput
@@ -28,12 +28,12 @@ class MinecraftRequest implements \JsonSerializable
      * @param TInput $input
      * @return $this
      */
-    public function input($input): self {
+    public function payload($input): self {
         $this->input = $input;
         return $this;
     }
 
-    public function jsonSerialize(): mixed
+    public function data(): array
     {
         $data = [
             'method' => $this->method->resourceLocation->__toString(),
@@ -53,7 +53,7 @@ class MinecraftRequest implements \JsonSerializable
                 $finalResult[] = $serializer->deserialize(json_encode($item), $unserializeClass, 'json');
             }
         }else{
-            $finalResult = $serializer->deserialize(json_encode($result[0]), $unserializeClass, 'json');
+            $finalResult = $serializer->deserialize(json_encode($result), $unserializeClass, 'json');
         }
 
         $this->result = $finalResult;
@@ -64,14 +64,5 @@ class MinecraftRequest implements \JsonSerializable
      */
     public function result() {
         return $this->result;
-    }
-
-    private function unserializeItem(string $object, string $className): object {
-        return unserialize(
-            $object,
-            [
-                'allowed_classes' => [$className]
-            ]
-        );
     }
 }

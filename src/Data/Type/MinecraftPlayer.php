@@ -2,31 +2,25 @@
 
 namespace Yazor\MinecraftProtocol\Data\Type;
 
-readonly class MinecraftPlayer
+class MinecraftPlayer
 {
-    public function __construct(private(set) ?string $id, private(set) ?string $name)
+    public ?string $id;
+    public ?string $name;
+
+    public function __construct()
     {
     }
 
     public static function fromUsername(string $username): MinecraftPlayer {
-        return new MinecraftPlayer(null, $username);
+        $player = new MinecraftPlayer();
+        $player->name = $username;
+        return $player;
     }
 
     public static function fromUuid(string $uuid): MinecraftPlayer {
-        return new MinecraftPlayer($uuid, null);
+        $player = new MinecraftPlayer();
+        $player->id = $uuid;
+        return $player;
     }
 
-    public function __serialize(): array
-    {
-        $data = [];
-        if($this->id !== null) $data['id'] = $this->id;
-        if($this->name !== null) $data['name'] = $this->name;
-        return $data;
-    }
-
-    public function __unserialize(array $data): void
-    {
-        $this->id = $data['id'];
-        $this->name = $data['name'];
-    }
 }

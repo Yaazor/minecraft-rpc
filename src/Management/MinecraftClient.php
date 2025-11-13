@@ -7,6 +7,7 @@ use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -32,10 +33,11 @@ class MinecraftClient
     }
 
     public function send(MinecraftRequest $request): MinecraftRequest {
-        $this->client->text(json_encode($request))->getContent();
+        $payload = $this->serializer->serialize($request->data(), 'json');
+        $this->client->text($payload);
+        $text = $this->client->receive()->getContent();
 
         if($request->method->outputClassName != null) {
-            $text = $this->client->receive()->getContent();
             $results = json_decode($text, true);
 
             if(empty($results['result'])) return $request;
@@ -44,5 +46,10 @@ class MinecraftClient
         }
 
         return $request;
+    }
+
+    public function __destruct()
+    {
+        $this->client->close();
     }
 }
