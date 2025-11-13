@@ -2,7 +2,6 @@
 
 namespace Yazor\MinecraftProtocol\Management\Method;
 
-use JetBrains\PhpStorm\ArrayShape;
 use Yazor\MinecraftProtocol\Data\ResourceLocation;
 use Yazor\MinecraftProtocol\Data\Type\MinecraftPlayer;
 use Yazor\MinecraftProtocol\Data\Type\ServerState;
@@ -17,6 +16,8 @@ class ServerMethod
      * @var ServerMethod<MinecraftPlayer, ServerState>
      */
     public static ServerMethod $ALLOWLIST;
+
+
     private array $paths = [];
 
     private function __construct(public readonly ResourceLocation $resourceLocation, private(set) ?string $inputClassName, private(set) ?string $outputClassName, private(set) bool $takes_array = false, private(set) bool $receives_array =  false)
@@ -31,6 +32,13 @@ class ServerMethod
      */
     public static function create(ResourceLocation $resourceLocation, ?string $inputClassName, ?string $outputClassName, bool $takes_array = false, bool $receives_array = false): object {
         return new self($resourceLocation, $inputClassName, $outputClassName, $receives_array);
+    }
+
+    /**
+     * @return MinecraftRequest<TInput, TOutput>
+     */
+    public function createRequest(): MinecraftRequest {
+        return new MinecraftRequest($this);
     }
 
     /**
@@ -53,22 +61,6 @@ class ServerMethod
 
     public function getPath(string $path): ?ServerMethod {
         return $this->paths[$path] ?? null;
-    }
-
-    /**
-     * @param TInput $object
-     * @return self<TInput, TOutput>
-     */
-    public function input($object): self {
-
-        return $this;
-    }
-
-    /**
-     * @return TOutput|null
-     */
-    public function result() {
-
     }
 
     public static function initiate(): void

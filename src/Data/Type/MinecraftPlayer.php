@@ -4,7 +4,7 @@ namespace Yazor\MinecraftProtocol\Data\Type;
 
 readonly class MinecraftPlayer
 {
-    public function __construct(private(set) string $uuid, private(set) ?string $name)
+    public function __construct(private(set) ?string $uuid, private(set) ?string $name)
     {
     }
 
