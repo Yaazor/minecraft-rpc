@@ -1,7 +1,8 @@
 {
   "name": "yazor/minecraft-rpc",
   "description": "PHP package which hooks into Minecraft's JSON RPC protocol in order to execute methods on the server",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
+  "homepage": "https://github.com/Yaazor/minecraft-rpc",
   "type": "library",
   "license": "MIT",
   "version": "v1.0.0-alpha",
@@ -13,10 +14,10 @@
   ],
   "require": {
     "php": ">=8.4",
-    "phrity/websocket": "dev-v3.6-main",
-    "symfony/serializer": "8.0.x-dev",
-    "symfony/property-info": "8.0.x-dev",
-    "symfony/property-access": "8.0.x-dev"
+    "phrity/websocket": "^3.2",
+    "symfony/serializer": "^7.3",
+    "symfony/property-info": "^7.3",
+    "symfony/property-access": "^7.3"
   },
   "autoload": {
     "psr-4": {
