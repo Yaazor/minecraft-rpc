@@ -54,9 +54,8 @@ class ServerMethod
     public function withPath(string $path, ?string $inputClassName, ?string $outputClassName, bool $takes_array = false, bool $receives_array = false): object {
         $location = $this->resourceLocation->withParam($path);
         $method = new self($location, $inputClassName, $outputClassName, $takes_array, $receives_array);
-        $paths[$path] = $method;
-
-        return $method;
+        $this->paths[$path] = $method;
+        return $this;
     }
 
     public function getPath(string $path): ?ServerMethod {

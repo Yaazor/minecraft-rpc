@@ -2,6 +2,8 @@
 
 namespace Yazor\MinecraftProtocol\Management\Method;
 
+use Symfony\Component\Serializer\Serializer;
+
 /**
  * @template TInput
  * @template TOuput
@@ -37,21 +39,21 @@ class MinecraftRequest implements \JsonSerializable
             'method' => $this->method->resourceLocation->__toString(),
             'id' => 1,
         ];
-        if(!empty($this->input)) $data['params'] = $this->input;
+        if(!empty($this->input)) $data['params'] = [$this->input];
 
         return $data;
     }
 
-    public function applyResult(mixed $result): void {
+    public function applyResult(mixed $result, Serializer $serializer): void {
         $unserializeClass = $this->method->outputClassName;
 
         if($this->method->receives_array) {
             $finalResult = [];
             foreach($result as $item) {
-                $finalResult[] = $this->unserializeItem($item, $unserializeClass);
+                $finalResult[] = $serializer->deserialize(json_encode($item), $unserializeClass, 'json');
             }
         }else{
-            $finalResult = $this->unserializeItem($result, $unserializeClass);
+            $finalResult = $serializer->deserialize(json_encode($result[0]), $unserializeClass, 'json');
         }
 
         $this->result = $finalResult;
@@ -64,10 +66,12 @@ class MinecraftRequest implements \JsonSerializable
         return $this->result;
     }
 
-    private function unserializeItem(mixed $object, string $className): object {
+    private function unserializeItem(string $object, string $className): object {
         return unserialize(
             $object,
-            [$className]
+            [
+                'allowed_classes' => [$className]
+            ]
         );
     }
 }

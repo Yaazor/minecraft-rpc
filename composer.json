@@ -11,7 +11,10 @@
   ],
   "require": {
     "php": ">=8.4",
-    "phrity/websocket": "dev-v3.6-main"
+    "phrity/websocket": "dev-v3.6-main",
+    "symfony/serializer": "8.0.x-dev",
+    "symfony/property-info": "8.0.x-dev",
+    "symfony/property-access": "8.0.x-dev"
   },
   "autoload": {
     "psr-4": {
