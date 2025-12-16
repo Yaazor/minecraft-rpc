@@ -5,10 +5,10 @@ namespace Yazor\MinecraftProtocol\Data;
 use Yazor\MinecraftProtocol\Management\ProtocolPath;
 
 /**
- * <p>Represents a Minecraft resource location.</p>
+ * <p>Represents a Minecraft resource identifier.</p>
  * <p>Equivalent to Kyori's <code>Key</code> class.</p>
  */
-class ResourceLocation
+class Identifier
 {
     private const string DEFAULT_NAMESPACE = "minecraft";
 
@@ -16,7 +16,7 @@ class ResourceLocation
     private(set) string $value;
 
     /**
-     * Constructs a ResourceLocation based on an optional namespace and path.
+     * Constructs an Identifier based on an optional namespace and path.
      * @param string|null $namespace Optional namespace (defaults to <code>minecraft</code>)
      * @param string $value
      */
@@ -29,7 +29,7 @@ class ResourceLocation
         $this->value = $value;
     }
 
-    public function withParam(ProtocolPath|string $param): ResourceLocation {
+    public function withParam(ProtocolPath|string $param): Identifier {
         $append = $param;
         if($param instanceof ProtocolPath) $append = $param->value;
         return self::create($this->namespace, $this->value.$append);
@@ -40,7 +40,7 @@ class ResourceLocation
     }
 
     /**
-     * Returns a resource location based on a separated string.
+     * Returns an identifier based on a separated string.
      * @param string $value
      * @return self
      */
